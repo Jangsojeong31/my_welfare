@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/welfare?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
+    show-sql: false
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: Asia/Seoul
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 86400000
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: gpt-4o-mini
+  timeout-seconds: 60
+  max-retries: 2
+
+welfare:
+  open-api:
+    service-key: ${WELFARE_OPEN_API_KEY}
+    list-call-tp: L
+    detail-serv-cd: W001
+    page-no: 1
+    num-of-rows: 100
+    max-pages: 10
+    timeout-ms: 30000
+    national-list-api-cd: NAW01
+    national-detail-api-cd: NAW02
+    local-list-api-cd: LCW01
+    local-detail-api-cd: LCW02
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
