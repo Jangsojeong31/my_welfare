@@ -38,10 +38,11 @@ public class WelfareOpenApiClient {
         params.put("serviceKey", properties.getServiceKey());
         if (apiUrl != null && apiUrl.contains("NationalWelfarelist")) {
             params.put("callTp", properties.getListCallTp());
-            params.put("pageNo", String.valueOf(pageNo));
-            params.put("numOfRows", String.valueOf(numOfRows));
             params.put("srchKeyCode", "001");
         }
+        params.put("pageNo", String.valueOf(pageNo));
+        params.put("numOfRows", String.valueOf(numOfRows));
+
         return execute(apiUrl, params);
     }
 

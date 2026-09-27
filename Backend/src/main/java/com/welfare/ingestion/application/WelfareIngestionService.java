@@ -71,45 +71,46 @@ public class WelfareIngestionService {
         int failedCount = 0;
         Integer totalCount = null;
 
-        while (fetchedPages < maxPages) {
-            OpenApiResponse listResponse = welfareOpenApiClient.fetchList(listApi.getApiUrl(), pageNo, numOfRows);
-            saveHistory(listApiCd, API_TYPE_LIST, listResponse);
-            fetchedPages++;
-            if (!listResponse.success()) {
-                throw new BusinessException(
-                        ErrorCode.OPEN_API_CALL_FAILED,
-                        listResponse.resultMessage() == null ? "목록 조회 API 호출에 실패했습니다." : listResponse.resultMessage()
-                );
-            }
-
-            List<JsonNode> items = listResponse.items();
-            fetchedCount += items.size();
-            if (listResponse.totalCount() != null) {
-                totalCount = listResponse.totalCount();
-            }
-
-            for (JsonNode item : items) {
-                try {
-                    boolean inserted = saveIfNew(listApiCd, detailApi, item);
-                    if (inserted) {
-                        insertedCount++;
-                    } else {
-                        skippedCount++;
-                    }
-                } catch (Exception e) {
-                    failedCount++;
-                    log.warn("복지 데이터 저장 실패 apiCd={}, servCd={}", listApiCd, welfareOpenApiMapper.extractServCd(item), e);
-                }
-            }
-
-            if (items.isEmpty() || items.size() < numOfRows) {
-                break;
-            }
-            if (totalCount != null && pageNo * numOfRows >= totalCount) {
-                break;
-            }
-            pageNo++;
+        OpenApiResponse listResponse = welfareOpenApiClient.fetchList(listApi.getApiUrl(), pageNo, numOfRows);
+        saveHistory(listApiCd, API_TYPE_LIST, listResponse);
+//        fetchedPages++;
+        if (!listResponse.success()) {
+            throw new BusinessException(
+                    ErrorCode.OPEN_API_CALL_FAILED,
+                    listResponse.resultMessage() == null ? "목록 조회 API 호출에 실패했습니다." : listResponse.resultMessage()
+            );
         }
+
+        List<JsonNode> items = listResponse.items();
+        fetchedCount += items.size();
+        if (listResponse.totalCount() != null) {
+            totalCount = listResponse.totalCount();
+        }
+
+        for (JsonNode item : items) {
+            try {
+                boolean inserted = saveIfNew(listApiCd, detailApi, item);
+                if (inserted) {
+                    insertedCount++;
+                } else {
+                    skippedCount++;
+                }
+            } catch (Exception e) {
+                failedCount++;
+                log.warn("복지 데이터 저장 실패 apiCd={}, servCd={}", listApiCd, welfareOpenApiMapper.extractServCd(item), e);
+            }
+        }
+
+//        if (items.isEmpty() || items.size() < numOfRows) {
+//            break;
+//        }
+//        if (totalCount != null && pageNo * numOfRows >= totalCount) {
+//            break;
+//        }
+        pageNo++;
+
+//        while (fetchedPages < maxPages) {
+//        }
 
         return IngestionResultResponse.builder()
                 .listApiCd(listApiCd)

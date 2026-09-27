@@ -42,7 +42,7 @@ welfare:
     list-call-tp: L
     detail-serv-cd: W001
     page-no: 1
-    num-of-rows: 100
+    num-of-rows: 200
     max-pages: 10
     timeout-ms: 30000
     national-list-api-cd: NAW01
