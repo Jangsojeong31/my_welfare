@@ -1,6 +1,7 @@
 package com.welfare.security;
 
 import com.welfare.common.api.ApiLoggingFilter;
+import com.welfare.config.CorsProperties;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final ApiLoggingFilter apiLoggingFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final CorsProperties corsProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/email-check").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/welfare/me").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/welfare", "/api/welfare/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/ai/welfare/**").permitAll()
                         .requestMatchers(
@@ -63,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedOriginPatterns(corsProperties.allowedOriginPatternList());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

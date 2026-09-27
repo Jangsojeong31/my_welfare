@@ -32,6 +32,12 @@ function logout() {
       <div class="flex items-center gap-2">
         <template v-if="auth.isAuthenticated">
           <span class="hidden text-sm text-slate-500 sm:inline">{{ auth.user?.name }}님</span>
+          <RouterLink
+            to="/profile"
+            class="rounded-full px-3 py-1.5 text-sm text-slate-600 hover:bg-primary-soft hover:text-primary-dark"
+          >
+            프로필
+          </RouterLink>
           <button
             type="button"
             class="rounded-full px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"

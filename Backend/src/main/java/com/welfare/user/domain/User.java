@@ -84,4 +84,26 @@ public class User extends UuidTimeEntity {
                 .status(UserStatus.ACTIVE)
                 .build();
     }
+
+    public UserProfile getOrCreateProfile() {
+        if (this.profile == null) {
+            this.profile = new UserProfile(this);
+        }
+        return this.profile;
+    }
+
+    public void replaceLifeStages(Set<LifeStage> values) {
+        this.lifeStages.clear();
+        this.lifeStages.addAll(values);
+    }
+
+    public void replaceHouseholdTypes(Set<HouseholdType> values) {
+        this.householdTypes.clear();
+        this.householdTypes.addAll(values);
+    }
+
+    public void replaceInterests(Set<Interest> values) {
+        this.interests.clear();
+        this.interests.addAll(values);
+    }
 }

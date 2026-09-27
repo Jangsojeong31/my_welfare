@@ -43,8 +43,11 @@ http.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    const { useToastStore } = await import('@/store/toast')
-    useToastStore().show(resolveErrorMessage(error), 'error')
+    const skipToast = error.response?.data?.errorCode === 'PROFILE_NOT_FOUND'
+    if (!skipToast) {
+      const { useToastStore } = await import('@/store/toast')
+      useToastStore().show(resolveErrorMessage(error), 'error')
+    }
 
     if (error.response?.status === 401 && !isAuthLoginRequest(error.config)) {
       const { useAuthStore } = await import('@/store/auth')

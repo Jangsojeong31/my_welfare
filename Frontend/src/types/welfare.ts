@@ -6,6 +6,8 @@ export interface WelfareListItem {
   ctpvNm: string
   sggNm: string
   wlfareInfoOutlCn: string
+  score?: number | null
+  matchReasons?: string[] | null
 }
 
 export interface WelfareListResponse {

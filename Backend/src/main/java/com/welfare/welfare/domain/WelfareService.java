@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Getter
 @Entity
@@ -100,6 +101,7 @@ public class WelfareService extends UuidTimeEntity {
     private String lastModYmd;
 
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "welfare_life_stage",
             joinColumns = @JoinColumn(name = "serv_id"),
@@ -108,6 +110,7 @@ public class WelfareService extends UuidTimeEntity {
     private Set<LifeStage> lifeStages = new HashSet<>();
 
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "welfare_household_type",
             joinColumns = @JoinColumn(name = "serv_id"),
@@ -116,6 +119,7 @@ public class WelfareService extends UuidTimeEntity {
     private Set<HouseholdType> householdTypes = new HashSet<>();
 
     @ManyToMany
+    @BatchSize(size = 50)
     @JoinTable(
             name = "welfare_interest",
             joinColumns = @JoinColumn(name = "serv_id"),

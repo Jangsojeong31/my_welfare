@@ -35,7 +35,7 @@ public class UserProfile extends BaseTimeEntity {
     @Column(name = "gender", length = 10)
     private String gender;
 
-    @Column(name = "region_code", length = 20)
+    @Column(name = "region_code", length = 100)
     private String regionCode;
 
     @Column(name = "income_level", length = 30)
@@ -50,5 +50,12 @@ public class UserProfile extends BaseTimeEntity {
     public UserProfile(User user) {
         this.user = user;
         this.disabledYn = "N";
+    }
+
+    public void update(LocalDate birthDate, String gender, String region, String incomeLevel) {
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.regionCode = region;
+        this.incomeLevel = incomeLevel;
     }
 }

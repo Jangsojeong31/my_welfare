@@ -106,7 +106,7 @@ CREATE TABLE `user_profile` (
 	`user_id` VARCHAR(50) NOT NULL COMMENT '회원 ID',
 	`birth_date` DATE NULL COMMENT '생년월일',
 	`gender` VARCHAR(10) NULL COMMENT '성별',
-	`region_code` VARCHAR(20) NULL COMMENT '거주 지역 코드',
+	`region_code` VARCHAR(100) NULL COMMENT '거주 지역 (시도/시군구)',
 	`income_level` VARCHAR(30) NULL COMMENT '소득 수준',
 	`disabled_yn` CHAR(1) NOT NULL DEFAULT 'N' COMMENT '장애인 여부 (Y/N)',
 	`marital_status` VARCHAR(20) NULL COMMENT '혼인 상태',

@@ -1,6 +1,7 @@
 package com.welfare.welfare.api;
 
 import com.welfare.common.api.dto.ApiResponse;
+import com.welfare.user.application.PersonalizedWelfareService;
 import com.welfare.welfare.api.dto.WelfareDetailResponse;
 import com.welfare.welfare.api.dto.WelfareListResponse;
 import com.welfare.welfare.application.WelfareQueryService;
@@ -14,6 +15,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelfareController {
 
     private final WelfareQueryService welfareQueryService;
+    private final PersonalizedWelfareService personalizedWelfareService;
 
     /** 생애주기, 가구형태, 관심분야 조건으로 복지 서비스 목록을 조회한다. */
     @Operation(
@@ -53,10 +57,28 @@ public class WelfareController {
         return ApiResponse.ok(welfareQueryService.search(lifeStages, householdTypes, interests, pageable));
     }
 
-    /** 복지 서비스 상세 정보를 조회한다. */
+    /** 로그인한 회원의 프로필로 맞춤 복지 목록을 점수순으로 조회한다. */
+    @Operation(
+            summary = "내 맞춤 복지 목록",
+            description = """
+                    저장된 프로필을 기준으로 맞춤 복지 목록을 조회합니다.
+                    로그인과 프로필이 필요하며, 프로필이 없으면 PROFILE_NOT_FOUND를 반환합니다.
+                    """
+    )
+    @GetMapping("/me")
+    public ApiResponse<WelfareListResponse> searchMine(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @ParameterObject
+            @PageableDefault(size = 20)
+            Pageable pageable
+    ) {
+        return ApiResponse.ok(personalizedWelfareService.search(userDetails.getUsername(), pageable));
+    }
+
+    /** 복지 서비스 상세 정보를 조회한다. ID는 UUID라 2글자인 me와 겹치지 않게 길이를 제한한다. */
     @SecurityRequirements
-    @Operation(summary = "복지 상세 조회", description = "복지서비스 ID로 상세 정보와 신청 방법, 문의처, 관련 링크/서식/법령을 조회합니다.")
-    @GetMapping("/{id}")
+    @Operation(summary = "복지 상세 조회", description = "복지서비스 ID로 상세 정보를 조회합니다.")
+    @GetMapping("/{id:.{8,50}}")
     public ApiResponse<WelfareDetailResponse> getDetail(
             @Parameter(description = "복지서비스 ID")
             @PathVariable String id

@@ -34,8 +34,12 @@ public class WelfareListResponse {
     private final boolean last;
 
     public static WelfareListResponse from(Page<WelfareService> page) {
+        return fromItems(page.map(WelfareListItemResponse::from));
+    }
+
+    public static WelfareListResponse fromItems(Page<WelfareListItemResponse> page) {
         return WelfareListResponse.builder()
-                .content(page.getContent().stream().map(WelfareListItemResponse::from).toList())
+                .content(page.getContent())
                 .page(page.getNumber())
                 .size(page.getSize())
                 .totalElements(page.getTotalElements())

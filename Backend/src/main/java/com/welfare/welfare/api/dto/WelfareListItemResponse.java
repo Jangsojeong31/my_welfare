@@ -1,7 +1,9 @@
 package com.welfare.welfare.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.welfare.welfare.domain.WelfareService;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,7 +33,19 @@ public class WelfareListItemResponse {
     @Schema(description = "복지서비스 개요")
     private final String wlfareInfoOutlCn;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "맞춤 점수 (맞춤 조회 시에만 포함)")
+    private final Integer score;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "매칭 이유 (맞춤 조회 시에만 포함)")
+    private final List<String> matchReasons;
+
     public static WelfareListItemResponse from(WelfareService service) {
+        return from(service, null, null);
+    }
+
+    public static WelfareListItemResponse from(WelfareService service, Integer score, List<String> matchReasons) {
         return WelfareListItemResponse.builder()
                 .id(service.getId())
                 .servNm(service.getServNm())
@@ -40,6 +54,8 @@ public class WelfareListItemResponse {
                 .ctpvNm(service.getCtpvNm())
                 .sggNm(service.getSggNm())
                 .wlfareInfoOutlCn(service.getWlfareInfoOutlCn())
+                .score(score)
+                .matchReasons(matchReasons)
                 .build();
     }
 }

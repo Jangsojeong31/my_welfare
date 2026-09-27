@@ -7,7 +7,7 @@ const route = useRoute()
 const tabs: { name: string; to: string; activeWhen: string[] }[] = [
   { name: '복지 검색', to: '/main', activeWhen: ['main'] },
   { name: '복지 목록', to: '/welfare', activeWhen: ['welfare-list'] },
-  // { name: '프로필 맞춤 복지', to: '/personalized', activeWhen: ['personalized'] },
+  { name: '프로필 맞춤 복지', to: '/personalized', activeWhen: ['personalized'] },
 ]
 
 const activeName = computed(() => String(route.name ?? ''))

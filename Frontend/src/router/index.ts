@@ -43,6 +43,18 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue'),
+      meta: { requiresAuth: true, hideTabs: true },
+    },
+    {
+      path: '/profile/edit',
+      name: 'profile-edit',
+      component: () => import('@/views/ProfileCreateUpdateView.vue'),
+      meta: { requiresAuth: true, hideTabs: true },
+    },
+    {
       path: '/404',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue'),
