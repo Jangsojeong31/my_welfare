@@ -1,4 +1,4 @@
-﻿-- MySQL 8.x DDL
+-- MySQL 8.x DDL
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -137,7 +137,7 @@ CREATE TABLE `api_collection_history` (
 	`api_cd` VARCHAR(20) NULL COMMENT 'API 코드',
 	`api_type` VARCHAR(20) NOT NULL COMMENT '호출한 API 유형 (LIST, DETAIL 등)',
 	`request_url` TEXT NULL COMMENT 'API 요청 URL',
-	`request_params` JSON NULL COMMENT 'API 요청 파라미터',
+	`request_params` LONGTEXT NULL COMMENT 'API 요청 파라미터(JSON 문자열)',
 	`response_code` INT NULL COMMENT 'API 응답 코드',
 	`response_message` TEXT NULL COMMENT 'API 응답 메시지',
 	`page_no` INT NULL COMMENT '요청 페이지 번호',

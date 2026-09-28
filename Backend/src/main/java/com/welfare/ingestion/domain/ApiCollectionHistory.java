@@ -2,6 +2,7 @@ package com.welfare.ingestion.domain;
 
 import com.welfare.common.domain.UuidIdentifiable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -28,8 +29,9 @@ public class ApiCollectionHistory extends UuidIdentifiable {
     @Column(name = "request_url", columnDefinition = "text")
     private String requestUrl;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "request_params", columnDefinition = "json")
+    @Convert(converter = RequestParamsConverter.class)
+    @JdbcTypeCode(SqlTypes.LONG32VARCHAR)
+    @Column(name = "request_params", columnDefinition = "longtext")
     private Map<String, String> requestParams;
 
     @Column(name = "response_code")
