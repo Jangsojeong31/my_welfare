@@ -36,33 +36,37 @@ public class WelfareIngestionService {
     private final WelfareOpenApiMapper welfareOpenApiMapper;
     private final WelfareCodeMatcher welfareCodeMatcher;
 
-    public IngestionBatchResponse ingestAll() {
+    public IngestionBatchResponse ingestAll(Integer pageNo, Integer numOfRows) {
         return IngestionBatchResponse.builder()
-                .national(ingestNationalWelfare())
-                .local(ingestLocalWelfare())
+                .national(ingestNationalWelfare(pageNo, numOfRows))
+                .local(ingestLocalWelfare(pageNo, numOfRows))
                 .build();
     }
 
-    public IngestionResultResponse ingestNationalWelfare() {
+    public IngestionResultResponse ingestNationalWelfare(Integer pageNo, Integer numOfRows) {
         return ingest(
                 openApiProperties.getNationalListApiCd(),
-                openApiProperties.getNationalDetailApiCd()
+                openApiProperties.getNationalDetailApiCd(),
+                pageNo,
+                numOfRows
         );
     }
 
-    public IngestionResultResponse ingestLocalWelfare() {
+    public IngestionResultResponse ingestLocalWelfare(Integer pageNo, Integer numOfRows) {
         return ingest(
                 openApiProperties.getLocalListApiCd(),
-                openApiProperties.getLocalDetailApiCd()
+                openApiProperties.getLocalDetailApiCd(),
+                pageNo,
+                numOfRows
         );
     }
 
-    private IngestionResultResponse ingest(String listApiCd, String detailApiCd) {
+    private IngestionResultResponse ingest(String listApiCd, String detailApiCd, Integer pageNo, Integer numOfRows) {
         WelfareApi listApi = getApi(listApiCd);
         WelfareApi detailApi = getApi(detailApiCd);
 
-        int pageNo = openApiProperties.getPageNo();
-        int numOfRows = openApiProperties.getNumOfRows();
+        int resolvedPageNo = pageNo != null ? pageNo : openApiProperties.getPageNo();
+        int resolvedNumOfRows = numOfRows != null ? numOfRows : openApiProperties.getNumOfRows();
         int maxPages = openApiProperties.getMaxPages();
         int fetchedPages = 0;
         int fetchedCount = 0;
@@ -71,7 +75,7 @@ public class WelfareIngestionService {
         int failedCount = 0;
         Integer totalCount = null;
 
-        OpenApiResponse listResponse = welfareOpenApiClient.fetchList(listApi.getApiUrl(), pageNo, numOfRows);
+        OpenApiResponse listResponse = welfareOpenApiClient.fetchList(listApi.getApiUrl(), resolvedPageNo, resolvedNumOfRows);
         saveHistory(listApiCd, API_TYPE_LIST, listResponse);
 //        fetchedPages++;
         if (!listResponse.success()) {
@@ -107,7 +111,6 @@ public class WelfareIngestionService {
 //        if (totalCount != null && pageNo * numOfRows >= totalCount) {
 //            break;
 //        }
-        pageNo++;
 
 //        while (fetchedPages < maxPages) {
 //        }
