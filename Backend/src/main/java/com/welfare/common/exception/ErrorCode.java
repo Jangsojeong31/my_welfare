@@ -14,6 +14,7 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "인증이 필요합니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "ACCESS_DENIED", "접근 권한이 없습니다."),
     WELFARE_API_NOT_FOUND(HttpStatus.NOT_FOUND, "WELFARE_API_NOT_FOUND", "복지 Open API 정보를 찾을 수 없습니다."),
+    NOT_FOUND(HttpStatus.NOT_FOUND, "NOT_FOUND", "요청한 경로를 찾을 수 없습니다."),
     WELFARE_SERVICE_NOT_FOUND(HttpStatus.NOT_FOUND, "WELFARE_SERVICE_NOT_FOUND", "복지 서비스를 찾을 수 없습니다."),
     OPEN_API_CALL_FAILED(HttpStatus.BAD_GATEWAY, "OPEN_API_CALL_FAILED", "Open API 호출에 실패했습니다."),
     OPENAI_CALL_FAILED(HttpStatus.BAD_GATEWAY, "OPENAI_CALL_FAILED", "OpenAI 호출에 실패했습니다."),
