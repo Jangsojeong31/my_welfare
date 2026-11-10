@@ -16,10 +16,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
 /**
- * 맞춤 조회 1단계 하드 필터.
- * 지역·생애주기·가구형태가 맞고, 만료되지 않은 복지다.
- * 가구형태는 태그가 없으면 통과, 있으면 프로필 코드와 하나라도 겹쳐야 한다.
- * 저소득(05)은 가구 코드 또는 소득 수준으로도 통과한다.
+ * 맞춤 조회 1단계: 받을 수 없는 복지 제외 (SQL WHERE).
+ * 아래 조건을 모두 통과해야 후보가 된다.
+ * - 지역: 전국(시도·시군구 없음) 또는 프로필 지역에 포함
+ * - 생애주기: 태그 없음, 프로필 생애주기, 전생애(01) 중 하나
+ * - 가구형태: 태그 없음 또는 프로필과 하나 이상 겹침. 저소득이면 05도 통과
+ * - 유효기간: 종료일 없음, 99991231, 오늘 이후 중 하나
+ * 태그 없음 = 대상 제한 없음. 관심분야는 보지 않는다.
  */
 public final class PersonalizedWelfareSpecifications {
 
