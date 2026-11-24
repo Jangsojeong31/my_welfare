@@ -1,4 +1,4 @@
-# AI 활용 복지 서비스
+# 마이 복지 
 
 <div align="center">
 
