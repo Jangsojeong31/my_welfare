@@ -13,7 +13,7 @@ function compactParams(params: WelfareSearchParams): Record<string, string | num
   const result: Record<string, string | number> = {
     page: params.page ?? 0,
     size: params.size ?? 20,
-    sort: params.sort ?? 'inqNum,desc',
+    sort: params.sort ?? 'lastModYmd,svcfrstRegTs,inqNum,desc',
   }
 
   if (params.lifeStages?.length) {

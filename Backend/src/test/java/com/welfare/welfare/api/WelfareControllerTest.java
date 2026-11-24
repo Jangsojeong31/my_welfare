@@ -17,15 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.mockito.ArgumentCaptor;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -88,13 +91,18 @@ class WelfareControllerTest {
                 .andExpect(jsonPath("$.data.content").isArray());
 
 
-        // search(null, null, null, pageable)가 실제로 호출되었는지 확인
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
         verify(welfareQueryService).search(
                 isNull(),
                 isNull(),
                 isNull(),
-                any(Pageable.class)
+                pageableCaptor.capture()
         );
+        assertThat(pageableCaptor.getValue().getSort()).isEqualTo(Sort.by(
+                Sort.Order.desc("lastModYmd"),
+                Sort.Order.desc("svcfrstRegTs"),
+                Sort.Order.desc("inqNum")
+        ));
     }
 
     @DisplayName("생애주기 조건으로 복지 목록을 조회한다.")
