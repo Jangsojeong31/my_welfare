@@ -1,6 +1,5 @@
 package com.welfare.welfare.api.dto;
 
-import com.welfare.welfare.domain.WelfareService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
@@ -32,10 +31,6 @@ public class WelfareListResponse {
 
     @Schema(description = "마지막 페이지 여부")
     private final boolean last;
-
-    public static WelfareListResponse from(Page<WelfareService> page) {
-        return fromItems(page.map(WelfareListItemResponse::from));
-    }
 
     public static WelfareListResponse fromItems(Page<WelfareListItemResponse> page) {
         return WelfareListResponse.builder()

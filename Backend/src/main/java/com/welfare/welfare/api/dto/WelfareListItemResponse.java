@@ -41,6 +41,26 @@ public class WelfareListItemResponse {
     @Schema(description = "매칭 이유 (맞춤 조회 시에만 포함)")
     private final List<String> matchReasons;
 
+    public static WelfareListItemResponse of(
+            String id,
+            String servNm,
+            String servDgst,
+            String onapPsbltYn,
+            String ctpvNm,
+            String sggNm,
+            String wlfareInfoOutlCn
+    ) {
+        return WelfareListItemResponse.builder()
+                .id(id)
+                .servNm(servNm)
+                .servDgst(servDgst)
+                .onapPsbltYn(onapPsbltYn)
+                .ctpvNm(ctpvNm)
+                .sggNm(sggNm)
+                .wlfareInfoOutlCn(wlfareInfoOutlCn)
+                .build();
+    }
+
     public static WelfareListItemResponse from(WelfareService service) {
         return from(service, null, null);
     }

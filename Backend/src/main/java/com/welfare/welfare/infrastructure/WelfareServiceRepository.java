@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface WelfareServiceRepository
-        extends JpaRepository<WelfareService, String>, JpaSpecificationExecutor<WelfareService> {
+        extends JpaRepository<WelfareService, String>, JpaSpecificationExecutor<WelfareService>, WelfareServiceRepositoryCustom {
 
     boolean existsByApiCdAndServCd(String apiCd, String servCd);
 

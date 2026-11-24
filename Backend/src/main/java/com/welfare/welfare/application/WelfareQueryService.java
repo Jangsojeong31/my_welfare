@@ -3,10 +3,12 @@ package com.welfare.welfare.application;
 import com.welfare.common.exception.BusinessException;
 import com.welfare.common.exception.ErrorCode;
 import com.welfare.welfare.api.dto.WelfareDetailResponse;
+import com.welfare.welfare.api.dto.WelfareListItemResponse;
 import com.welfare.welfare.api.dto.WelfareListResponse;
 import com.welfare.welfare.domain.WelfareService;
 import com.welfare.welfare.infrastructure.WelfareServiceRepository;
 import com.welfare.welfare.infrastructure.WelfareServiceSpecifications;
+import com.welfare.welfare.infrastructure.projection.WelfareListProjection;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -23,13 +25,14 @@ public class WelfareQueryService {
 
     private final WelfareServiceRepository welfareServiceRepository;
 
+    /** 목록에 표시하는 컬럼만 조회한다. */
     public WelfareListResponse search(
             List<String> lifeStages,
             List<String> householdTypes,
             List<String> interests,
             Pageable pageable
     ) {
-        Page<WelfareService> page = welfareServiceRepository.findAll(
+        Page<WelfareListProjection> page = welfareServiceRepository.findList(
                 WelfareServiceSpecifications.withFilters(
                         normalize(lifeStages),
                         normalize(householdTypes),
@@ -37,7 +40,19 @@ public class WelfareQueryService {
                 ),
                 pageable
         );
-        return WelfareListResponse.from(page);
+        return WelfareListResponse.fromItems(page.map(this::toListItem));
+    }
+
+    private WelfareListItemResponse toListItem(WelfareListProjection item) {
+        return WelfareListItemResponse.of(
+                item.getId(),
+                item.getServNm(),
+                item.getServDgst(),
+                item.getOnapPsbltYn(),
+                item.getCtpvNm(),
+                item.getSggNm(),
+                item.getWlfareInfoOutlCn()
+        );
     }
 
     public WelfareDetailResponse getDetail(String id) {
